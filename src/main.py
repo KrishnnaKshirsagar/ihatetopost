@@ -70,15 +70,24 @@ def main(argv: list[str] | None = None) -> int:
     dry_run = args.dry_run or settings.dry_run
     mode = (args.mode or os.getenv("POST_MODE", "photo")).lower()
     signature = args.signature if args.signature is not None else settings.signature
+    custom_quote = (args.quote if args.quote is not None else os.getenv("CUSTOM_QUOTE", "")).strip()
+    custom_author = (
+        args.author
+        if args.quote is not None
+        else (os.getenv("CUSTOM_AUTHOR", "").strip() or "Unknown")
+    )
+    custom_palette = (
+        args.palette if args.palette is not None else os.getenv("CUSTOM_PALETTE", "").strip()
+    ) or None
 
     history = load_history(HISTORY_FILE)
     quote = (
-        Quote(text=args.quote.strip(), author=args.author.strip())
-        if args.quote
+        Quote(text=custom_quote, author=custom_author)
+        if custom_quote
         else pick_next_quote(HISTORY_FILE)
     )
     palette = pick_palette(
-        palette_name=args.palette,
+        palette_name=custom_palette,
         last_palette=history.get("last_palette"),
     )
 

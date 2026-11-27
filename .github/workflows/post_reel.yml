@@ -6,6 +6,29 @@ on:
   #   - cron: "30 13 * * *"
   workflow_dispatch:
     inputs:
+      quote:
+        description: "Custom quote text (leave blank to auto-fetch from ZenQuotes)"
+        required: false
+        default: ""
+        type: string
+      author:
+        description: "Author name for custom quote (optional)"
+        required: false
+        default: "Unknown"
+        type: string
+      palette:
+        description: "Color palette (leave blank for auto)"
+        required: false
+        default: ""
+        type: choice
+        options:
+          - ""
+          - cobalt_white
+          - mustard_ink
+          - charcoal_red
+          - forest_cream
+          - terracotta_cream
+          - paper_ink
       dry_run:
         description: "Generate Reel video only without posting to Instagram"
         required: false
@@ -42,6 +65,9 @@ jobs:
           CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
           CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
           QUOTE_SIGNATURE: "-ff"
+          CUSTOM_QUOTE: ${{ github.event.inputs.quote || '' }}
+          CUSTOM_AUTHOR: ${{ github.event.inputs.author || 'Unknown' }}
+          CUSTOM_PALETTE: ${{ github.event.inputs.palette || '' }}
           IMAGE_WIDTH: "1080"
           IMAGE_HEIGHT: "1920"
           POST_MODE: "reel"
