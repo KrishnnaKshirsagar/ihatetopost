@@ -1,9 +1,9 @@
 name: Quote Reel to Instagram
 
 on:
-  # Uncomment to run on a schedule (e.g. daily at 13:30 UTC / 19:00 IST):
-  # schedule:
-  #   - cron: "30 13 * * *"
+  # Runs daily at 13:30 UTC (19:00 / 7:00 PM IST)
+  schedule:
+    - cron: "30 13 * * *"
   workflow_dispatch:
     inputs:
       quote:
