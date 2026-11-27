@@ -5,18 +5,25 @@ from __future__ import annotations
 import time
 import requests
 
-GRAPH_API_BASE = "https://graph.facebook.com/v21.0"
+FACEBOOK_GRAPH_BASE = "https://graph.facebook.com/v21.0"
+INSTAGRAM_GRAPH_BASE = "https://graph.instagram.com/v21.0"
+
+
+def _graph_base(access_token: str) -> str:
+    """Use graph.instagram.com for Instagram Login tokens (IG...), else graph.facebook.com."""
+    return INSTAGRAM_GRAPH_BASE if access_token.startswith("IG") else FACEBOOK_GRAPH_BASE
 
 
 def _wait_for_container(
     container_id: str,
     access_token: str,
+    graph_base: str,
     timeout_seconds: int = 60,
     poll_interval: float = 3.0,
 ) -> None:
     """Poll container status until Meta finishes fetching and processing the image."""
     deadline = time.monotonic() + timeout_seconds
-    url = f"{GRAPH_API_BASE}/{container_id}"
+    url = f"{graph_base}/{container_id}"
 
     while time.monotonic() < deadline:
         response = requests.get(
@@ -48,8 +55,10 @@ def publish_photo(
     if not ig_user_id or not access_token:
         raise ValueError("IG_USER_ID and IG_ACCESS_TOKEN are required to post.")
 
+    graph_base = _graph_base(access_token)
+
     create_resp = requests.post(
-        f"{GRAPH_API_BASE}/{ig_user_id}/media",
+        f"{graph_base}/{ig_user_id}/media",
         data={
             "image_url": image_url,
             "caption": caption,
@@ -62,10 +71,10 @@ def publish_photo(
     if not creation_id:
         raise RuntimeError(f"Failed to create media container: {create_resp.text}")
 
-    _wait_for_container(creation_id, access_token)
+    _wait_for_container(creation_id, access_token, graph_base)
 
     publish_resp = requests.post(
-        f"{GRAPH_API_BASE}/{ig_user_id}/media_publish",
+        f"{graph_base}/{ig_user_id}/media_publish",
         data={
             "creation_id": creation_id,
             "access_token": access_token,
