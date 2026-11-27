@@ -117,8 +117,8 @@ def pick_next_quote(history_path: Path = HISTORY_FILE) -> Quote:
 
 def format_caption(quote: Quote) -> str:
     """Build an Instagram caption for the post."""
-    return (
-        f'"{quote.text}"\n'
-        f"— {quote.author}\n\n"
-        "#quotes #dailyquotes #mindset #wisdom #reflection"
-    )
+    author = quote.author.strip()
+    tags = "#quotes #dailyquotes #mindset #wisdom #reflection"
+    if author and author.lower() != "unknown":
+        return f'"{quote.text}"\n— {author}\n\n{tags}'
+    return f'"{quote.text}"\n\n{tags}'

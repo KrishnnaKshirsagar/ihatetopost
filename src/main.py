@@ -40,8 +40,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument(
         "--author",
         type=str,
-        default="Unknown",
-        help="Author attribution when --quote is provided.",
+        default="",
+        help="Author attribution when --quote is provided (optional).",
     )
     parser.add_argument(
         "--signature",
@@ -74,7 +74,7 @@ def main(argv: list[str] | None = None) -> int:
     custom_author = (
         args.author
         if args.quote is not None
-        else (os.getenv("CUSTOM_AUTHOR", "").strip() or "Unknown")
+        else os.getenv("CUSTOM_AUTHOR", "").strip()
     )
     custom_palette = (
         args.palette if args.palette is not None else os.getenv("CUSTOM_PALETTE", "").strip()

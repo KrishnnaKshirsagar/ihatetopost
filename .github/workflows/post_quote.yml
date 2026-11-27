@@ -14,7 +14,7 @@ on:
       author:
         description: "Author name for custom quote (optional)"
         required: false
-        default: "Unknown"
+        default: ""
         type: string
       palette:
         description: "Color palette (leave blank for auto)"
@@ -64,7 +64,7 @@ jobs:
           CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
           QUOTE_SIGNATURE: "-ff"
           CUSTOM_QUOTE: ${{ github.event.inputs.quote || '' }}
-          CUSTOM_AUTHOR: ${{ github.event.inputs.author || 'Unknown' }}
+          CUSTOM_AUTHOR: ${{ github.event.inputs.author || '' }}
           CUSTOM_PALETTE: ${{ github.event.inputs.palette || '' }}
           DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
         run: python -m src.main

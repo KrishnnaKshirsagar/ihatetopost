@@ -36,3 +36,10 @@ def test_format_caption() -> None:
     caption = format_caption(quote)
     assert '"Stay hungry, stay foolish."' in caption
     assert "— Steve Jobs" in caption
+
+
+def test_format_caption_without_author() -> None:
+    quote = Quote(text="Just a standalone quote.", author="")
+    caption = format_caption(quote)
+    assert '"Just a standalone quote."' in caption
+    assert "—" not in caption
