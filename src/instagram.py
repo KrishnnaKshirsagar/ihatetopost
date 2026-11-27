@@ -45,13 +45,13 @@ def _wait_for_container(
     raise TimeoutError(f"Timed out waiting for Instagram container {container_id}")
 
 
-def publish_photo(
+def _publish_container(
     ig_user_id: str,
     access_token: str,
-    image_url: str,
-    caption: str,
+    payload: dict[str, str],
+    wait_timeout: int = 60,
 ) -> str:
-    """Create a media container, wait for processing, and publish it to Instagram."""
+    """Create a media container, wait for processing, and publish it."""
     if not ig_user_id or not access_token:
         raise ValueError("IG_USER_ID and IG_ACCESS_TOKEN are required to post.")
 
@@ -59,11 +59,7 @@ def publish_photo(
 
     create_resp = requests.post(
         f"{graph_base}/{ig_user_id}/media",
-        data={
-            "image_url": image_url,
-            "caption": caption,
-            "access_token": access_token,
-        },
+        data={**payload, "access_token": access_token},
         timeout=30,
     )
     create_resp.raise_for_status()
@@ -71,7 +67,7 @@ def publish_photo(
     if not creation_id:
         raise RuntimeError(f"Failed to create media container: {create_resp.text}")
 
-    _wait_for_container(creation_id, access_token, graph_base)
+    _wait_for_container(creation_id, access_token, graph_base, timeout_seconds=wait_timeout)
 
     publish_resp = requests.post(
         f"{graph_base}/{ig_user_id}/media_publish",
@@ -86,3 +82,39 @@ def publish_photo(
     if not media_id:
         raise RuntimeError(f"Failed to publish media container: {publish_resp.text}")
     return str(media_id)
+
+
+def publish_photo(
+    ig_user_id: str,
+    access_token: str,
+    image_url: str,
+    caption: str,
+) -> str:
+    """Publish a photo post to Instagram."""
+    return _publish_container(
+        ig_user_id=ig_user_id,
+        access_token=access_token,
+        payload={"image_url": image_url, "caption": caption},
+        wait_timeout=60,
+    )
+
+
+def publish_reel(
+    ig_user_id: str,
+    access_token: str,
+    video_url: str,
+    caption: str,
+    share_to_feed: bool = True,
+) -> str:
+    """Publish a Reel video post to Instagram."""
+    return _publish_container(
+        ig_user_id=ig_user_id,
+        access_token=access_token,
+        payload={
+            "media_type": "REELS",
+            "video_url": video_url,
+            "caption": caption,
+            "share_to_feed": "true" if share_to_feed else "false",
+        },
+        wait_timeout=180,
+    )
