@@ -1,12 +1,12 @@
 # Automated Quote-to-Instagram Poster
 
-Generates textured, handwritten-style quote cards (1080×1350) with `-BL` in the bottom-right corner using quotes from [ZenQuotes](https://zenquotes.io/), and posts them automatically to Instagram via the official Meta Instagram Graph API on a GitHub Actions schedule.
+Generates textured, handwritten-style quote cards (1080×1350) with `-ff` in the bottom-right corner using quotes from [ZenQuotes](https://zenquotes.io/), and posts them automatically to Instagram via the official Meta Instagram Graph API on a GitHub Actions schedule.
 
 ## Project Structure
 
 - `src/config.py` — Palettes (`cobalt_white`, `mustard_ink`, `charcoal_red`, `forest_cream`, `terracotta_cream`, `paper_ink`) and environment configuration
 - `src/quotes.py` — Fetches quotes from ZenQuotes and deduplicates via `data/posted_quotes.json`
-- `src/generator.py` — Renders textured cardstock backgrounds, wrapped handwritten typography (`assets/fonts/ShortStack-Regular.ttf`), and `-BL` signature
+- `src/generator.py` — Renders textured cardstock backgrounds, wrapped handwritten typography (`assets/fonts/ShortStack-Regular.ttf`), and `-ff` signature
 - `src/uploader.py` — Uploads the generated image to ImgBB or Cloudinary for a public HTTPS URL (required by Instagram Graph API)
 - `src/instagram.py` — Publishes the image to Instagram via Meta Graph API (`v21.0`)
 - `.github/workflows/post_quote.yml` — Daily scheduled GitHub Actions workflow
@@ -25,7 +25,7 @@ python -m src.main --dry-run
 Optional flags:
 - `--palette cobalt_white` (or `mustard_ink`, `charcoal_red`, `forest_cream`, `terracotta_cream`, `paper_ink`)
 - `--quote "Your custom quote" --author "Author Name"`
-- `--signature "-BL"`
+- `--signature "-ff"`
 
 ## GitHub Actions Setup
 

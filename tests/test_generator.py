@@ -23,7 +23,7 @@ def test_generate_quote_image_dimensions_and_file(tmp_path: Path) -> None:
         quote_text="Some people might try to convince you that you are a basic blue gel pen.",
         output_path=out_file,
         palette=palette,
-        signature="-BL",
+        signature="-ff",
         width=1080,
         height=1350,
     )

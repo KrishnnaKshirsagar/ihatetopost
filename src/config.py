@@ -86,7 +86,7 @@ class Settings:
     @classmethod
     def from_env(cls) -> "Settings":
         return cls(
-            signature=os.getenv("QUOTE_SIGNATURE", "-BL"),
+            signature=os.getenv("QUOTE_SIGNATURE", "-ff"),
             image_width=int(os.getenv("IMAGE_WIDTH", "1080")),
             image_height=int(os.getenv("IMAGE_HEIGHT", "1350")),
             font_path=Path(os.getenv("FONT_PATH", str(DEFAULT_FONT_PATH))),

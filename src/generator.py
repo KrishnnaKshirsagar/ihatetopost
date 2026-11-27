@@ -111,7 +111,7 @@ def generate_quote_image(
     quote_text: str,
     output_path: Path,
     palette: Palette,
-    signature: str = "-BL",
+    signature: str = "-ff",
     width: int = 1080,
     height: int = 1350,
     font_path: Path = DEFAULT_FONT_PATH,

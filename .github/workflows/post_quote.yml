@@ -39,7 +39,7 @@ jobs:
           CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
           CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
           CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
-          QUOTE_SIGNATURE: "-BL"
+          QUOTE_SIGNATURE: "-ff"
           DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
         run: python -m src.main
 

@@ -45,7 +45,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         "--signature",
         type=str,
         default=None,
-        help="Bottom-right signature (default: -BL).",
+        help="Bottom-right signature (default: -ff).",
     )
     parser.add_argument(
         "--output",
