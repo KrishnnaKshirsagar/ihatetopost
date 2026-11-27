@@ -1,0 +1,61 @@
+name: Daily Quote to Instagram
+
+on:
+  schedule:
+    # Runs daily at 03:30 UTC (09:00 IST)
+    - cron: "30 3 * * *"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Generate image only without posting to Instagram"
+        required: false
+        default: "false"
+        type: boolean
+
+permissions:
+  contents: write
+
+jobs:
+  post-quote:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Generate and post quote
+        env:
+          IG_USER_ID: ${{ secrets.IG_USER_ID }}
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          IMGBB_API_KEY: ${{ secrets.IMGBB_API_KEY }}
+          CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
+          CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
+          CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
+          QUOTE_SIGNATURE: "-BL"
+          DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
+        run: python -m src.main
+
+      - name: Upload generated image artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: generated-quote-card
+          path: output/*.jpg
+          if-no-files-found: ignore
+
+      - name: Commit updated quote history
+        if: ${{ (github.event.inputs.dry_run || 'false') != 'true' }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/posted_quotes.json
+          git diff --staged --quiet || git commit -m "chore: record posted quote"
+          git push
