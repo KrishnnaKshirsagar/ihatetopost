@@ -2,8 +2,8 @@ name: Daily Quote to Instagram
 
 on:
   schedule:
-    # Runs daily at 03:30 UTC (09:00 IST)
-    - cron: "30 3 * * *"
+    # Runs daily at 03:17 UTC (08:47 AM IST) — off-peak minute to avoid :00/:30 queue drops
+    - cron: "17 3 * * *"
   workflow_dispatch:
     inputs:
       quote:

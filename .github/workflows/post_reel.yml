@@ -1,9 +1,9 @@
 name: Quote Reel to Instagram
 
 on:
-  # Runs daily at 13:30 UTC (19:00 / 7:00 PM IST)
+  # Runs daily at 13:17 UTC (18:47 / 6:47 PM IST) — off-peak minute to avoid :00/:30 queue drops
   schedule:
-    - cron: "30 13 * * *"
+    - cron: "17 13 * * *"
   workflow_dispatch:
     inputs:
       quote:
