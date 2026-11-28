@@ -12,6 +12,7 @@ FONTS_DIR = ASSETS_DIR / "fonts"
 DATA_DIR = ROOT_DIR / "data"
 OUTPUT_DIR = ROOT_DIR / "output"
 HISTORY_FILE = DATA_DIR / "posted_quotes.json"
+QUOTES_BANK_FILE = DATA_DIR / "quotes.json"
 
 DEFAULT_FONT_PATH = FONTS_DIR / "ShortStack-Regular.ttf"
 

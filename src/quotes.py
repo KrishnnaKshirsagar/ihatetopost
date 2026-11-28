@@ -9,7 +9,7 @@ from pathlib import Path
 import random
 import requests
 
-from src.config import HISTORY_FILE
+from src.config import HISTORY_FILE, QUOTES_BANK_FILE
 
 ZENQUOTES_BATCH_URL = "https://zenquotes.io/api/quotes"
 MAX_QUOTE_CHARS = 240
@@ -92,27 +92,51 @@ def fetch_zenquotes(timeout: int = 15) -> list[Quote]:
     return quotes
 
 
-def pick_next_quote(history_path: Path = HISTORY_FILE) -> Quote:
-    """Pick an unposted quote from ZenQuotes, falling back to local quotes."""
+def load_curated_quotes(quotes_path: Path = QUOTES_BANK_FILE) -> list[Quote]:
+    """Load curated quotes from data/quotes.json if present."""
+    if not quotes_path.exists():
+        return []
+    with quotes_path.open("r", encoding="utf-8") as fh:
+        items = json.load(fh)
+    quotes: list[Quote] = []
+    for item in items:
+        text = str(item.get("text", "")).strip()
+        author = str(item.get("author", "")).strip()
+        if text:
+            quotes.append(Quote(text=text, author=author))
+    return quotes
+
+
+def pick_next_quote(
+    history_path: Path = HISTORY_FILE,
+    quotes_path: Path = QUOTES_BANK_FILE,
+) -> Quote:
+    """Pick an unposted quote, mixing curated quotes (data/quotes.json) with ZenQuotes."""
     history = load_history(history_path)
     seen = set(history["posted"])
 
-    candidates: list[Quote] = []
-    try:
-        candidates = fetch_zenquotes()
-    except Exception:
-        candidates = []
+    unseen_curated = [q for q in load_curated_quotes(quotes_path) if q.digest not in seen]
 
-    unseen = [q for q in candidates if q.digest not in seen]
-    if unseen:
-        return random.choice(unseen)
+    api_candidates: list[Quote] = []
+    try:
+        api_candidates = fetch_zenquotes()
+    except Exception:
+        api_candidates = []
+    unseen_api = [q for q in api_candidates if q.digest not in seen]
+
+    if unseen_curated and unseen_api:
+        return random.choice(random.choice([unseen_curated, unseen_api]))
+    if unseen_curated:
+        return random.choice(unseen_curated)
+    if unseen_api:
+        return random.choice(unseen_api)
 
     fallback = [Quote(text=t, author=a) for t, a in FALLBACK_QUOTES]
     unseen_fallback = [q for q in fallback if q.digest not in seen]
     if unseen_fallback:
         return random.choice(unseen_fallback)
 
-    return random.choice(candidates or fallback)
+    return random.choice(api_candidates or load_curated_quotes(quotes_path) or fallback)
 
 
 def format_caption(quote: Quote) -> str:
