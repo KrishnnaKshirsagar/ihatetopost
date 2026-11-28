@@ -147,10 +147,26 @@ def pick_next_quote(
     return random.choice(api_candidates or load_curated_quotes(quotes_path) or fallback)
 
 
+CAPTION_CTAS: tuple[str, ...] = (
+    "Save this for later.",
+    "Read that again.",
+    "A gentle reminder for today.",
+    "Share this with someone who needs it.",
+)
+
+HASHTAG_SETS: tuple[str, ...] = (
+    "#quotes #dailyquotes #mindset #wisdom #reflection",
+    "#fabledframe #dailyreminders #wordsofwisdom #thoughtoftheday #calm",
+    "#quietthoughts #selfgrowth #quotesdaily #peaceofmind #mindfulness",
+    "#lifequotes #healing #positivevibes #perspective #quotestoliveby",
+)
+
+
 def format_caption(quote: Quote) -> str:
-    """Build an Instagram caption for the post."""
+    """Build an Instagram caption with a short CTA and rotated hashtag set."""
     author = quote.author.strip()
-    tags = "#quotes #dailyquotes #mindset #wisdom #reflection"
+    cta = random.choice(CAPTION_CTAS)
+    tags = random.choice(HASHTAG_SETS)
     if author and author.lower() != "unknown":
-        return f'"{quote.text}"\n— {author}\n\n{tags}'
-    return f'"{quote.text}"\n\n{tags}'
+        return f'"{quote.text}"\n— {author}\n\n{cta}\n\n{tags}'
+    return f'"{quote.text}"\n\n{cta}\n\n{tags}'

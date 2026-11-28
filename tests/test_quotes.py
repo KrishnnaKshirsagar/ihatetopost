@@ -7,6 +7,8 @@ from pathlib import Path
 from unittest.mock import patch
 
 from src.quotes import (
+    CAPTION_CTAS,
+    HASHTAG_SETS,
     Quote,
     format_caption,
     load_curated_quotes,
@@ -61,6 +63,8 @@ def test_format_caption() -> None:
     caption = format_caption(quote)
     assert '"Stay hungry, stay foolish."' in caption
     assert "— Steve Jobs" in caption
+    assert any(cta in caption for cta in CAPTION_CTAS)
+    assert any(tags in caption for tags in HASHTAG_SETS)
 
 
 def test_format_caption_without_author() -> None:
@@ -68,3 +72,5 @@ def test_format_caption_without_author() -> None:
     caption = format_caption(quote)
     assert '"Just a standalone quote."' in caption
     assert "—" not in caption
+    assert any(cta in caption for cta in CAPTION_CTAS)
+    assert any(tags in caption for tags in HASHTAG_SETS)
