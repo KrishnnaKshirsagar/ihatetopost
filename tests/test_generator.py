@@ -10,9 +10,10 @@ from src.generator import generate_quote_image, pick_palette
 
 
 def test_pick_palette_avoids_repeat() -> None:
-    for _ in range(10):
-        chosen = pick_palette(last_palette="cobalt_white")
-        assert chosen.name != "cobalt_white"
+    recent = ["cobalt_white", "mustard_ink", "sage_ink", "blush_espresso"]
+    for _ in range(20):
+        chosen = pick_palette(last_palette="blush_espresso", recent_palettes=recent)
+        assert chosen.name not in recent
 
 
 def test_generate_quote_image_dimensions_and_file(tmp_path: Path) -> None:

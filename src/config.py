@@ -65,6 +65,43 @@ PALETTES: tuple[Palette, ...] = (
         text_rgb=(28, 28, 28),      # Ink black
         grain_strength=5.5,
     ),
+    # Pastel palettes
+    Palette(
+        name="sage_ink",
+        bg_rgb=(201, 214, 196),     # Soft pastel sage
+        text_rgb=(30, 43, 34),      # Deep forest ink
+        grain_strength=5.5,
+    ),
+    Palette(
+        name="blush_espresso",
+        bg_rgb=(242, 215, 213),     # Soft pastel blush
+        text_rgb=(46, 28, 26),      # Deep espresso
+        grain_strength=5.5,
+    ),
+    Palette(
+        name="lavender_plum",
+        bg_rgb=(220, 212, 232),     # Soft pastel lavender
+        text_rgb=(37, 30, 48),      # Deep plum ink
+        grain_strength=5.5,
+    ),
+    Palette(
+        name="sky_navy",
+        bg_rgb=(207, 224, 235),     # Soft pastel powder blue
+        text_rgb=(20, 40, 64),      # Deep navy
+        grain_strength=5.5,
+    ),
+    Palette(
+        name="butter_ink",
+        bg_rgb=(246, 232, 184),     # Soft pastel buttercream
+        text_rgb=(36, 32, 24),      # Warm ink
+        grain_strength=5.5,
+    ),
+    Palette(
+        name="peach_cocoa",
+        bg_rgb=(243, 213, 192),     # Soft pastel peach
+        text_rgb=(45, 30, 22),      # Rich cocoa
+        grain_strength=5.5,
+    ),
 )
 
 

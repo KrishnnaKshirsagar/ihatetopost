@@ -49,14 +49,19 @@ class Quote:
 
 
 def load_history(history_path: Path = HISTORY_FILE) -> dict:
-    """Load posted quote digests and last palette from JSON."""
+    """Load posted quote digests and recent palettes from JSON."""
     if not history_path.exists():
-        return {"posted": [], "last_palette": None}
+        return {"posted": [], "last_palette": None, "recent_palettes": []}
     with history_path.open("r", encoding="utf-8") as fh:
         data = json.load(fh)
+    recent = list(data.get("recent_palettes", []))
+    last_palette = data.get("last_palette")
+    if not recent and last_palette:
+        recent = [last_palette]
     return {
         "posted": list(data.get("posted", [])),
-        "last_palette": data.get("last_palette"),
+        "last_palette": last_palette,
+        "recent_palettes": recent,
     }
 
 
@@ -65,10 +70,13 @@ def save_history(
     palette_name: str,
     history_path: Path = HISTORY_FILE,
 ) -> None:
-    """Record a posted quote digest and palette name."""
+    """Record a posted quote digest and recent palette names (keeps last 4)."""
     history = load_history(history_path)
     if quote.digest not in history["posted"]:
         history["posted"].append(quote.digest)
+    recent = list(history.get("recent_palettes", []))
+    recent.append(palette_name)
+    history["recent_palettes"] = recent[-4:]
     history["last_palette"] = palette_name
     history_path.parent.mkdir(parents=True, exist_ok=True)
     with history_path.open("w", encoding="utf-8") as fh:

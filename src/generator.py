@@ -13,8 +13,9 @@ from src.config import DEFAULT_FONT_PATH, PALETTES, Palette
 def pick_palette(
     palette_name: str | None = None,
     last_palette: str | None = None,
+    recent_palettes: list[str] | None = None,
 ) -> Palette:
-    """Select a palette by name or pick one different from last_palette."""
+    """Select a palette by name or pick one not used in recent_palettes (or last_palette)."""
     if palette_name:
         for palette in PALETTES:
             if palette.name == palette_name:
@@ -22,8 +23,14 @@ def pick_palette(
         available = ", ".join(p.name for p in PALETTES)
         raise ValueError(f"Unknown palette '{palette_name}'. Available: {available}")
 
-    choices = [p for p in PALETTES if p.name != last_palette] or list(PALETTES)
-    return random.choice(choices)
+    excluded = set(recent_palettes or [])
+    if last_palette:
+        excluded.add(last_palette)
+
+    choices = [p for p in PALETTES if p.name not in excluded]
+    if not choices and last_palette:
+        choices = [p for p in PALETTES if p.name != last_palette]
+    return random.choice(choices or list(PALETTES))
 
 
 def _create_textured_background(

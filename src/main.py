@@ -89,6 +89,7 @@ def main(argv: list[str] | None = None) -> int:
     palette = pick_palette(
         palette_name=custom_palette,
         last_palette=history.get("last_palette"),
+        recent_palettes=history.get("recent_palettes"),
     )
 
     timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")

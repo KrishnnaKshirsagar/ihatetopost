@@ -29,6 +29,12 @@ on:
           - forest_cream
           - terracotta_cream
           - paper_ink
+          - sage_ink
+          - blush_espresso
+          - lavender_plum
+          - sky_navy
+          - butter_ink
+          - peach_cocoa
       dry_run:
         description: "Generate image only without posting to Instagram"
         required: false
